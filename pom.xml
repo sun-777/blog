@@ -1,0 +1,273 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.blog</groupId>
+    <artifactId>blog</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    
+    <properties>
+        <!-- java8 到 java13, ... 的版本号分别为8, 9, 10, 11, 12, 13, ... -->
+        <java.version>11</java.version>
+        <encoding>UTF-8</encoding>
+        <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>${encoding}</project.reporting.outputEncoding>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        
+        <!-- dependency version -->
+        <reversion>1.0.0</reversion>
+        <springboot-dependencies.version>2.5.7</springboot-dependencies.version>
+        <druid.version>1.2.8</druid.version>
+        <HikariCP.version>5.0.0</HikariCP.version>
+        <mybatis.version>2.2.0</mybatis.version>
+        <mysql.version>8.0.26</mysql.version>
+        <jjwt.version>0.11.2</jjwt.version>
+        <cglib.version>3.3.0</cglib.version>
+        <jackson.version>2.13.0</jackson.version>
+        <jsch.version>0.1.55</jsch.version>
+        <commons-codec.version>1.15</commons-codec.version>
+        <commons-io.version>2.11.0</commons-io.version>
+        <slf4j.version>1.7.32</slf4j.version>
+        <junit-platform.version>1.8.1</junit-platform.version>
+        <junit.version>5.8.1</junit.version>
+    </properties>
+    
+    
+    <!-- 所有的子项目默认依赖 -->
+    <dependencies>
+        <!-- slf4j -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+        </dependency>
+        
+        <!-- JUnit5 -->
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-commons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    
+    
+    <dependencyManagement><!-- lock down dependencies versions -->
+        <dependencies>
+            <dependency>
+                <!-- Import dependency management from Spring Boot -->
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${springboot-dependencies.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            
+            
+            <!-- HikariCP -->
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${HikariCP.version}</version>
+            </dependency>
+            
+            
+            <!-- MyBatis -->
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+
+
+            <!-- MySQL -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            
+            <!-- jjwt -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            
+            <dependency>
+                <groupId>cglib</groupId>
+                <artifactId>cglib</artifactId>
+                <version>${cglib.version}</version>
+            </dependency>
+            
+            <!-- SSH通讯包 -->
+            <dependency>
+                <groupId>com.jcraft</groupId>
+                <artifactId>jsch</artifactId>
+                <version>${jsch.version}</version>
+            </dependency>
+
+            <!-- Jackson -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <!-- Apache commons-codec、commons-io -->
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
+
+
+            <!-- JUnit5 -->
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-launcher</artifactId>
+                <version>${junit-platform.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-commons</artifactId>
+                <version>${junit-platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- slf4j -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>${slf4j.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+    
+    
+    <build>
+        <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults -->
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${springboot-dependencies.version}</version>
+                    <configuration>
+                        <!-- 打包时将外部引入的jar包打包到项目jar -->
+                        <includeSystemScope>true</includeSystemScope>
+                        <!-- 使用指定版本的Maven编译器 -->
+                        <fork>true</fork>
+                        <addResources>true</addResources>
+                    </configuration>
+                        <!-- 打包成jar包后，运行时提示jar中没有主清单属性，需加入以下内容 -->
+<!--                     <executions>
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                    </executions> -->
+                </plugin>
+                
+                <plugin>
+                  <artifactId>maven-clean-plugin</artifactId>
+                  <version>3.1.0</version>
+                </plugin>
+                <plugin>
+                  <artifactId>maven-site-plugin</artifactId>
+                  <version>3.7.1</version>
+                </plugin>
+                <plugin>
+                  <artifactId>maven-project-info-reports-plugin</artifactId>
+                  <version>3.0.0</version>
+                </plugin>
+                <!-- see http://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
+                <plugin>
+                  <artifactId>maven-resources-plugin</artifactId>
+                  <version>3.0.2</version>
+                </plugin>
+                <plugin>
+                  <artifactId>maven-compiler-plugin</artifactId>
+                  <version>3.8.0</version>
+                </plugin>
+                <plugin>
+                  <artifactId>maven-surefire-plugin</artifactId>
+                  <version>2.22.1</version>
+                </plugin>
+                <plugin>
+                  <artifactId>maven-jar-plugin</artifactId>
+                  <version>3.0.2</version>
+                </plugin>
+                <plugin>
+                  <artifactId>maven-install-plugin</artifactId>
+                  <version>2.5.2</version>
+                </plugin>
+                <plugin>
+                  <artifactId>maven-deploy-plugin</artifactId>
+                  <version>2.8.2</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+    </build>
+    
+    
+    <modules>
+        <module>blog-quark</module>
+    </modules>
+</project>

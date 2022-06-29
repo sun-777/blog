@@ -1,0 +1,168 @@
+CREATE DATABASE IF NOT EXISTS `blog_db`;
+-- grant all privileges on blog_db.* to 'test'@'%' with grant option;
+-- flush privileges;
+
+-- ----------------------------
+-- Table structure for t_article
+-- ----------------------------
+-- DROP TABLE IF EXISTS `blog_db`.`t_article`;
+CREATE TABLE IF NOT EXISTS `blog_db`.`t_article` (
+  `article_id` BIGINT UNSIGNED NOT NULL COMMENT '文章ID',
+  `title` VARCHAR(256) NOT NULL COMMENT '标题',
+  `author` BIGINT UNSIGNED NOT NULL COMMENT '用户ID',
+  `description` VARCHAR(500) COMMENT '文章描述',
+  `content_id` BIGINT UNSIGNED NOT NULL COMMENT '文章内容ID',
+  `create_time` TIMESTAMP NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`article_id`) USING BTREE
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC COMMENT = '文章表';
+
+
+CREATE TABLE IF NOT EXISTS `blog_db`.`t_content`(
+  `content_id` BIGINT UNSIGNED NOT NULL COMMENT '文章内容ID',
+  `content` MEDIUMTEXT COMMENT '文章内容',
+  `update_time` TIMESTAMP NOT NULL COMMENT '修改时间',
+  PRIMARY KEY (`content_id`) USING BTREE
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC COMMENT = '文章内容';
+
+
+-- ----------------------------
+-- Table structure for t_article_category
+-- ----------------------------
+DROP TABLE IF EXISTS `blog_db`.`t_article_category`;
+CREATE TABLE IF NOT EXISTS `blog_db`.`t_article_category` (
+  `article_id` BIGINT UNSIGNED NOT NULL COMMENT '文章ID',
+  `category_id` BIGINT UNSIGNED NOT NULL COMMENT '分类ID',
+  PRIMARY KEY (`article_id`,`category_id`)  USING BTREE
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC COMMENT = '文章-分类关联表';
+
+
+
+-- ----------------------------
+-- Table structure for t_article_tag
+-- ----------------------------
+-- DROP TABLE IF EXISTS `blog_db`.`t_article_tag`;
+CREATE TABLE IF NOT EXISTS `blog_db`.`t_article_tag` (
+  `article_id` BIGINT UNSIGNED NOT NULL COMMENT '文章ID',
+  `tag_id` BIGINT UNSIGNED NOT NULL COMMENT '标签ID',
+  PRIMARY KEY (`article_id`, `tag_id`) USING BTREE
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC COMMENT='文章-标签关联表';
+
+
+
+-- ----------------------------
+-- Table structure for t_category
+-- ----------------------------
+CREATE TABLE IF NOT EXISTS `blog_db`.`t_category` (
+  `category_id` BIGINT UNSIGNED NOT NULL  COMMENT '分类ID',
+  `category_name` VARCHAR(100) DEFAULT NULL COMMENT '分类名称',
+  PRIMARY KEY (`category_id`) USING BTREE
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC COMMENT='分类表';
+
+-- ----------------------------
+-- Table structure for t_comment
+-- ----------------------------
+-- DROP TABLE IF EXISTS `blog_db`.`t_comment`;
+CREATE TABLE IF NOT EXISTS `blog_db`.`t_comment` (
+  `comment_id` BIGINT UNSIGNED NOT NULL COMMENT '留言ID',
+  `article_id` BIGINT UNSIGNED NOT NULL COMMENT '文章ID',
+  `user_id` BIGINT UNSIGNED NOT NULL COMMENT '留言的用户ID',
+  `content` text COMMENT '留言内容',
+  `to_comment_id` BIGINT UNSIGNED COMMENT '上级留言ID',   -- 当对文章评论时，为空；当对留言评论时，为留言ID
+  `ip` VARCHAR(48) DEFAULT NULL COMMENT 'IP地址',
+  `device` VARCHAR(100) DEFAULT NULL COMMENT '设备',
+  `address` VARCHAR(100) DEFAULT NULL COMMENT '地址',
+  `create_time` TIMESTAMP DEFAULT NULL COMMENT '留言时间',
+  PRIMARY KEY (`comment_id`) USING BTREE
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC COMMENT='留言表';
+
+
+
+-- ----------------------------
+-- Table structure for t_link
+-- ----------------------------
+CREATE TABLE IF NOT EXISTS `blog_db`.`t_link` (
+  `link_id` BIGINT UNSIGNED NOT NULL  COMMENT '友链ID',
+  `name` VARCHAR(100) DEFAULT NULL COMMENT '连接名称',
+  `url` VARCHAR(255) DEFAULT NULL COMMENT '连接URL',
+  PRIMARY KEY (`link_id`) USING BTREE
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC COMMENT='友链表';
+
+
+-- ----------------------------
+-- Table structure for t_log
+-- ----------------------------
+CREATE TABLE IF NOT EXISTS `blog_db`.`t_log` (
+  `log_id` BIGINT UNSIGNED NOT NULL  COMMENT '系统日志ID',
+  `user_id` BIGINT UNSIGNED NOT NULL COMMENT '用户ID',
+  `operation` VARCHAR(20) DEFAULT NULL COMMENT '操作描述',
+  `time` BIGINT UNSIGNED DEFAULT NULL COMMENT '耗时(毫秒)',
+  `method` VARCHAR(100) DEFAULT NULL COMMENT '操作方法',
+  `params` VARCHAR(255) DEFAULT NULL COMMENT '操作参数',
+  `ip` VARCHAR(48) DEFAULT NULL COMMENT 'IP地址',
+  `create_time` TIMESTAMP DEFAULT NULL COMMENT '操作时间',
+  `location` VARCHAR(20) DEFAULT NULL COMMENT '操作地点',
+  PRIMARY KEY (`log_id`) USING BTREE
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC COMMENT='系统日志表';
+
+
+-- ----------------------------
+-- Table structure for t_login_log
+-- ----------------------------
+CREATE TABLE IF NOT EXISTS `blog_db`.`t_login_log` (
+  `login_log_id` BIGINT UNSIGNED NOT NULL  COMMENT '编号',
+  `user_id` BIGINT UNSIGNED NOT NULL COMMENT '用户ID',
+  `ip` VARCHAR(20) DEFAULT NULL COMMENT 'IP地址',
+  `location` VARCHAR(255) DEFAULT NULL COMMENT '登录地点',
+  `create_time` TIMESTAMP DEFAULT NULL COMMENT '登录时间',
+  `device` VARCHAR(255) DEFAULT NULL COMMENT '登录设备',
+  PRIMARY KEY (`login_log_id`) USING BTREE
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC COMMENT = '登录日志表';
+
+
+-- ----------------------------
+-- Table structure for t_tag
+-- ----------------------------
+CREATE TABLE IF NOT EXISTS `blog_db`.`t_tag` (
+  `tag_id` BIGINT UNSIGNED NOT NULL  COMMENT '标签ID',
+  `name` VARCHAR(255) DEFAULT NULL COMMENT '标签名称',
+  PRIMARY KEY (`tag_id`) USING BTREE
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC COMMENT='标签表';
+
+
+
+-- ----------------------------
+-- Table structure for t_user
+-- ----------------------------
+-- DROP TABLE IF EXISTS `blog_db`.`t_user`;
+CREATE TABLE IF NOT EXISTS `blog_db`.`t_user` (
+  `user_id` BIGINT UNSIGNED NOT NULL COMMENT '用户ID',
+  `email` VARCHAR(64) DEFAULT NULL COMMENT '邮箱',
+  `password` VARCHAR(255) NOT NULL COMMENT '密码',
+  `nickname` VARCHAR(20) NOT NULL COMMENT '昵称',
+  `gender` VARCHAR(3) NOT NULL COMMENT '性别',
+  `birth` DATE NOT NULL COMMENT '生日',
+  `profile_id` BIGINT UNSIGNED NOT NULL COMMENT '用户头像ID',
+  `introduction` VARCHAR(100) DEFAULT NULL COMMENT '简介',
+  `create_time` TIMESTAMP DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`user_id`) USING BTREE,
+  UNIQUE KEY `uk_t_user_email` (`email`) USING BTREE
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC COMMENT = '用户表';
+-- ALTER TABLE `blog_db`.`t_user` ADD CONSTRAINT `uk_t_user_email` UNIQUE (`email`) USING BTREE;
+-- ALTER TABLE `blog_db`.`t_user` DROP CONSTRAINT `uk_t_user_email`;
+
+-- DROP TABLE IF EXISTS `blog_db`.`t_profile`;
+CREATE TABLE IF NOT EXISTS `blog_db`.`t_profile` (
+  `profile_id` BIGINT UNSIGNED NOT NULL COMMENT '用户头像ID',
+  `profile` VARCHAR(255) NOT NULL COMMENT '头像（图片文件在服务器上的相对路径，如果未尾有@default，表示系统默认头像）',
+  -- `sha256` VARBINARY(32) NOT NULL COMMENT 'SHA-256散列值',
+  `update_time` TIMESTAMP DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`profile_id`) USING BTREE
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC COMMENT = '用户头像表';
+
+
+CREATE TABLE IF NOT EXISTS `blog_db`.`t_preference` (
+  `preference_id` BIGINT UNSIGNED NOT NULL COMMENT '偏好ID',
+  `preference_key` VARCHAR(64) NOT NULL COMMENT '偏好设定key',
+  `preference_value` VARCHAR(255) NOT NULL COMMENT '偏好设定值',
+  PRIMARY KEY (`preference_id`) USING BTREE
+) ENGINE = INNODB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC COMMENT = '偏好设置表';

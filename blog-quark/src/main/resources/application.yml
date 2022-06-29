@@ -1,0 +1,164 @@
+server:
+  port: 8089
+  tomcat:
+    uri-encoding: UTF-8
+  servlet:
+    context-path: /
+    encoding:
+      enabled: true
+      force: true
+      charset: UTF-8
+      
+spring:
+  application:
+    name: Quark Blog
+  main:
+    # console, log, off
+    banner-mode: off
+    allow-bean-definition-overriding: true
+  devtools:
+    livereload:
+      enabled: false
+      #默认端口号35729
+      port: 35730
+    restart:
+      enabled: true
+      exclude: WEB-INF/**,static/**
+      additional-exclude: src/main/java
+
+  # HikariCP数据源配置
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://centos:3306/blog_db
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: test
+    password: Test123+
+    hikari:
+      pool-name: hikari-ds
+      maximum-pool-size: 20
+      minimum-idle: 5
+      #空间连接超时时间600s
+      idle-timeout: 600000
+      #数据库连接超时时间5s
+      connection-timeout: 5000
+      #每个连接最大存活时间1800s
+      max-lifetime: 1800000
+      leakDetectionThreshold: 600000
+      #Oracle: SELECT 1 FROM DUAL
+      connection-test-query: SELECT 1
+      connection-init-sql: SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
+      #是否允许连接池暂停，默认为: false
+      allow-pool-suspension: false
+      data-source-properties:
+        # MySQL数据库的连接属性
+        useSSL: false
+        useUnicode: true
+        characterEncoding: utf8
+        connectTimeout: 5000
+        socketTimeout: 3000
+        autoReconnect: true
+        useLegacyDatetimeCode: false
+        serverTimezone: "Asia/Shanghai"
+        zeroDateTimeBehavior: convertToNull
+        useCursorFetch: true
+        allowPublicKeyRetrieval: true
+        allowMultiQueries: true
+        #是否开启ps cache，客户端JDBC生效
+        cachePrepStmts: true
+        #可以Cache的SQL数量，客户端JDBC生效
+        prepStmtCacheSize: 250
+        #SQL的字符数限制，某个SQL超过这个字符数，则不会做Cache，客户端JDBC生效
+        prepStmtCacheSqlLimit: 2048
+        #启动服务端PS Cache，单设置这个参数true不会生效，须同时具备：
+        # cachePrepStmts = true
+        # prepStmtCacheSize > 0
+        # prepStmtCacheSqlLimit > sql.length()
+        # emulateUnsupportedPstmts = true（默认值）
+        # 数据库版本 > 4.0.0
+        useServerPrepStmts: true
+        useLocalSessionState: true
+        rewriteBatchedStatements: true
+        cacheResultSetMetadata: true
+        cacheServerConfiguration: true
+        elideSetAutoCommits: true
+        maintainTimeStats: true
+
+
+  # blog-quark自定义的配置
+  quark:
+    # 文件服务器配置（通过SFTP协议，操作文件）
+    file-server: 
+      # windows, linux, unix；默认：linux
+      os: linux
+      # 文件服务器hostname或ip地址
+      hostname: centos
+      # 文件服务器ssh端口号（默认是：22）
+      port: 22
+      # 文件服务器登录用户名
+      username: root
+      # 文件服务器登录密码
+      password: sunxden
+      # FTP文件服务器，Nginx反向代理base url，为80默认端口号。约定使用slash ("/")，不可以是backslash("\")
+      ftp-proxy-base-url: http://centos/upload
+    # id生成器配置
+    key-generator:
+      snowflake:
+        # work id range [0, 1023]
+        work-id: 1
+    # 加密
+    crypto:
+      # aes加密密钥
+      aes:
+        type: aes
+        # base64编码
+        key: c3hkMTIzNDU2Kw==
+      # rsa公钥和私钥（公钥加密，私钥解密）
+      rsa:
+        type: rsa
+        # base64编码
+        public-key: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv17QldKTmtdTrnAnBqOJeT7SOThwaFqj4gldro7+Jq4p4M8+4t1xPVB\
+                    aU980gjkfMsAtMgSLhz1wVX34n2N5ea6ioXdsdgvBeZKeef/ftqoOtjHGUPrVwMVz/IDwROvdL3LqUXmlRDq2ah2bb8l7GqHCw6z\
+                    G3yzOh9pFAK/rdarLzdKzALdeLwjZmXjsZDGqysJ1VPkEiaslantYxqW9FaN1NKCIoBmyEjb2qYAECLAsXu7ALJJSdfcKRxkkque\
+                    o3hjyLQEByRpWWXIGL5DnIX9nW/jFrWuk74fJ7Nk+p2u9EGyjPNpZMZ6XPRRiJsEjjiTMMA/e/bI+xHl+1epkbwIDAQAB"
+        # base64编码
+        private-key: "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC/XtCV0pOa11OucCcGo4l5PtI5OHBoWqPiCV2ujv4mringzz\
+                    7i3XE9UFpT3zSCOR8ywC0yBIuHPXBVffifY3l5rqKhd2x2C8F5kp55/9+2qg62McZQ+tXAxXP8gPBE690vcupReaVEOrZqHZtvyX\
+                    saocLDrMbfLM6H2kUAr+t1qsvN0rMAt14vCNmZeOxkMarKwnVU+QSJqyVqe1jGpb0Vo3U0oIigGbISNvapgAQIsCxe7sAsklJ19w\
+                    pHGSSq56jeGPItAQHJGlZZcgYvkOchf2db+MWta6Tvh8ns2T6na70QbKM82lkxnpc9FGImwSOOJMwwD979sj7EeX7V6mRvAgMBAA\
+                    ECggEAAnPsqH7ydWGdKPc3CNa/xFYRy7n1duDyiMsl8D7U8xn4X3FIlQ/Ri7+j6L9LpP+mbrgX3DRCtZEMB4x9y00zGWQroXYuZb\
+                    Tw3eYLMfUdoPG9DojEyfTtGHNvcSUV70w2oY0Pg8vTWnSGMgX/IAetFEJOhMOKKQIiA4vApqmakv9/toLAJVlTI6+m9c0E6Wo2wM\
+                    qFdO8UZbBZxOWmj98qLZWVf7P/Ruxz6P/ovNpk8SsnGdYoLjcpui3sx2OyT3udVCggfqqyn0kvxSaZa/acg05fQ+yHcaXSqlfij5\
+                    USAmznWZr3nuUTEOU1Z1RESRw3S0Acou31lR7OMUQm0z2lAQKBgQD5JqdCXBzr+0nSFgasIXHqSU6wmNw/Hd2napsn4QWNL3rGT6\
+                    4fCdVotkb74GFKjgtkFY0HHEqAguGcAPxnahsDfcN8gLryVlSDnsrLPFPtzyk6qTNWrP0VfWjm6O160vZkYpd4Cz08bx9LzI4Geb\
+                    e90shp29ZjtZ2++gNAcRVPnwKBgQDEoYrvZMO+sa0n/CNnv1u9Jtqz1YyEk82oSTIINFZrZ3NTEtCXBUhMktmB3hu9RPoImDyJaE\
+                    CF9aC4PDcKTZ9LPImuHeQkyWImIYzYpTWDtWtVcjlvjqyi5l84gtB19uxFoO+dN39B8yzq+IySHQlGMwI1hDIC4FfBmPxPpUx5MQ\
+                    KBgG0GUw6gzC8fSRBbfxP3lqeU6JAyc75SzVmjNr3eo9VCP5Fj8Ke4X+BwUuOJLkm3mphzLcE8ygUuQJdJfymprqR6df6XPjcpO9\
+                    ZUuBzzCy73Be2beNGm5SBwPmU87B5hDlyjH/DxyhwV7DX5DvUaciLoh7Z68nezU5HsSVv7n/21AoGAOzLzlF1+/WOa4UXtFugq44\
+                    jWIXxyoNuq+DaJRKUVO6LaurEYcc9aVAuGRq4rJdGlgX7sAuaLPomUCMPAQm7aPZmNTgmbzWOAFEDXmcYrlWrCVOhd2HNZEHZRRr\
+                    9DqbBctB3e5jN2MdHXvSp1j+wEBcmHqbsSH4GRiizYEdaPbpECgYBXYnIZJ7iNz7DWmhsYsnp/eB/kWs66T5SBhop56pMUVW/U0W\
+                    ta+NrQ1HfB2Ttj6Pzp8o8vpqlOu2gZrpf6PE0o4/Vp56EdxCdjrwtO0mAH7JxIX7DPmJ0avppM0e3MKT2G45QUh7psgtRTAgxoPM\
+                    PuLH0HGasN5GDN11pNrdd+Fg=="
+
+
+mybatis:
+  type-aliases-package: com.blog.quark.entity
+  type-handlers-package: com.blog.quark.typehandler
+  configuration-properties:
+    forceBigDecimals: true
+    # 需要开启，支持JDK8+ java.util.time
+    useJSR310Types: true
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+    local-cache-scope: statement
+    shrink-whitespaces-in-sql: true
+    lazy-load-trigger-methods:
+    - equals
+    - clone
+    - hashcode
+    - toString
+    lazy-loading-enabled: true
+    aggressive-lazy-loading: false
+
+logging:
+  config: classpath:./logback-spring.xml
