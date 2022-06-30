@@ -38,7 +38,7 @@
 * 实体类使用了自定义的@MappingTable注解（将实体类与数据库表名绑定），在启动类上配置注解@MappingTableScan，实现自动扫描使用了注解@MappingTable的类。
 * 通过监听ContextRefreshedEvent事件，执行配置初始化。
 
-###  4、前后端分离，部署时前端静态文件整合到后端
+###  4、前后端分离，部署时前端静态文件整合到SpringBoot框架
 
 ​        由于前端使用了动态路由，故在整合后使用了过滤器UrlFilter，对动态路由部分的请求URL做了相应处理，以便正确请求数据。
 
