@@ -112,7 +112,7 @@
 
   ```shell
   // 追加写入映射信息到hosts文件（根据实际ip配置）
-  # echo "192.168.1.30  " >> /etc/hosts
+  # echo "192.168.1.30  centos" >> /etc/hosts
   ```
 
 - 重启FTP服务
